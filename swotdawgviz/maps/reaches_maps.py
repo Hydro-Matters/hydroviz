@@ -39,11 +39,14 @@ class ReachesMap():
         """
         
         # Set default values for unset parameters
-        if cmap is None:
+        if cmap is None and varname is not None:
             cmap = branca.colormap.linear.YlOrRd_09.scale(self._dataset[varname].min(),
                                                           self._dataset[varname].max())
         if tooltip_attributes is None:
-            tooltip_attributes = ["reach_id", varname]
+            if varname is None:
+                tooltip_attributes = ["reach_id"]
+            else:
+                tooltip_attributes = ["reach_id", varname]
         
         # Retrieve bounding box and center
         bounds = self._dataset.geometry.total_bounds.tolist()
@@ -54,17 +57,23 @@ class ReachesMap():
                                   tiles=self._tiles, zoom_start=6)
                        
         # Add layer
-        style_function = ColormapStyleFunction(cmap, varname)
         tooltip = folium.GeoJsonTooltip(fields=tooltip_attributes)
+
+        if varname is None:
+            style_function = ColormapStyleFunction(cmap, varname,randomcolors=True)
+        else:
+            style_function = ColormapStyleFunction(cmap, varname)
+
         folium.GeoJson(self._json_dataset,
                        style_function=style_function,
                        tooltip=tooltip,
                        name="Test").add_to(new_map)
 
-        # Add colorbar
-        colormap = cmap.to_step(n=8)
-        colormap.caption = varname
-        colormap.add_to(new_map)
+        if varname is not None:
+            # Add colorbar
+            colormap = cmap.to_step(n=8)
+            colormap.caption = varname
+            colormap.add_to(new_map)
 
         new_map.fit_bounds(self._dataset.total_bounds.tolist())
         
