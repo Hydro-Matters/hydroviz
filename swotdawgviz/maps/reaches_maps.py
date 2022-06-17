@@ -23,7 +23,7 @@ class ReachesMap():
         self._json_dataset = dataset.to_json()
         self._tiles = tiles
             
-    def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None):
+    def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None):
         """Build a map width reaches as centerlines colored with values of a variable
         
         Parameters
@@ -42,19 +42,28 @@ class ReachesMap():
         if cmap is None and varname is not None:
             cmap = branca.colormap.linear.YlOrRd_09.scale(self._dataset[varname].min(),
                                                           self._dataset[varname].max())
+        elif isinstance(cmap, list):
+            cmap = branca.colormap.LinearColormap(cmap).scale(self._dataset[varname].min(),
+                                                                          self._dataset[varname].max())
         if tooltip_attributes is None:
             if varname is None:
                 tooltip_attributes = ["reach_id"]
             else:
                 tooltip_attributes = ["reach_id", varname]
-        
-        # Retrieve bounding box and center
-        bounds = self._dataset.geometry.total_bounds.tolist()
-        center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
 
-        # Create map
-        new_map = folium.Map(location=center,
-                                  tiles=self._tiles, zoom_start=6)
+        if add_to_map is None:
+        
+            # Retrieve bounding box and center
+            bounds = self._dataset.geometry.total_bounds.tolist()
+            center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
+            
+            # Create map
+            new_map = folium.Map(location=center, tiles=self._tiles, zoom_start=6)
+            parent_map = new_map
+            
+        else:
+            
+            parent_map = add_to_map
                        
         # Add layer
         tooltip = folium.GeoJsonTooltip(fields=tooltip_attributes)
@@ -67,20 +76,23 @@ class ReachesMap():
         folium.GeoJson(self._json_dataset,
                        style_function=style_function,
                        tooltip=tooltip,
-                       name="Test").add_to(new_map)
+                       name="Test").add_to(parent_map)
 
         if varname is not None:
+            
             # Add colorbar
             colormap = cmap.to_step(n=8)
             colormap.caption = varname
-            colormap.add_to(new_map)
+            colormap.add_to(parent_map)
 
-        new_map.fit_bounds(self._dataset.total_bounds.tolist())
+        #if add_to_map is None:
+            #parent_map.fit_bounds(self._dataset.total_bounds.tolist())
         
-        return new_map
+        if add_to_map is None:
+            return new_map
 
             
-    def get_polygons_map(self, varname, width_attribute, cmap=None, tooltip_attributes=None):
+    def get_polygons_map(self, varname, width_attribute, cmap=None, tooltip_attributes=None, add_to_map=None):
         """Build a map width reaches as polygons computed using the width, colored with values of a variable
         
         Parameters
@@ -99,8 +111,14 @@ class ReachesMap():
         if cmap is None:
             cmap = branca.colormap.linear.YlOrRd_09.scale(self._dataset[varname].min(),
                                                           self._dataset[varname].max())
+        elif isinstance(cmap, list):
+            cmap = branca.colormap.LinearColormap(cmap).scale(self._dataset[varname].min(),
+                                                                          self._dataset[varname].max())
         if tooltip_attributes is None:
-            tooltip_attributes = ["reach_id", varname]
+            if varname is None:
+                tooltip_attributes = ["reach_id"]
+            else:
+                tooltip_attributes = ["reach_id", varname]
         
         # Project dataset to EPSG:3857 to get distance in meters (for buffers)
         dataset = self._dataset.to_crs('epsg:3857')
@@ -119,13 +137,19 @@ class ReachesMap():
         # Project dataset back to EPSG:4326
         dataset = dataset.to_crs('epsg:4326')
         
-        # Retrieve bounding box and center
-        bounds = dataset.geometry.total_bounds.tolist()
-        center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
+        if add_to_map is None:
         
-        # Create map
-        new_map = folium.Map(location=center,
-                                  tiles=self._tiles, zoom_start=6)
+            # Retrieve bounding box and center
+            bounds = dataset.geometry.total_bounds.tolist()
+            center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
+            
+            # Create map
+            new_map = folium.Map(location=center, tiles=self._tiles, zoom_start=6)
+            parent_map = new_map
+            
+        else:
+            
+            parent_map = add_to_map
 
         # Add layer
         style_function = ColormapStyleFunction(cmap, varname)
@@ -133,59 +157,17 @@ class ReachesMap():
         folium.GeoJson(dataset.to_json(),
                        style_function=style_function,
                        tooltip=tooltip,
-                       name="Reach map of variable %s" % varname).add_to(new_map)
+                       name="Reach map of variable %s" % varname).add_to(parent_map)
 
-        # Add colorbar
-        colormap = cmap.to_step(n=8)
-        colormap.caption = varname
-        colormap.add_to(new_map)
-
-        new_map.fit_bounds(self._dataset.total_bounds.tolist())
-        
-        return new_map
-
-
-    # DEPRECATED
-    def get_polygons_map2(self, varname, width_attribute, cmap=cm.jet, tooltip_attributes=None):
-        
-        # Project dataset to EPSG:3857
-        dataset = self._dataset.to_crs("epsg:3857")
-        
-        # Add buffer
-        #dataset = cpr_gdf['geometry'] = cpr_gdf.geometry.buffer(buffer_length_in_meters)
-        polygons = []
-        for index in dataset.index:
+        if varname is not None:
             
-            # Retrieve centerline
-            centerline = dataset.loc[index, "geometry"]
-            
-            # Add buffer
-            polygon = centerline.buffer(dataset.loc[index, width_attribute], cap_style=2)
-            dataset.loc[index, "geometry"] = polygon
-            
-        # Project dataset back to EPSG:4326
-        dataset = dataset.to_crs("epsg:4326")
+            # Add colorbar
+            colormap = cmap.to_step(n=8)
+            colormap.caption = varname
+            colormap.add_to(parent_map)
+
+        #if add_to_map is None:
+            #parent_map.fit_bounds(self._dataset.total_bounds.tolist())
         
-        bounds = dataset.geometry.total_bounds.tolist()
-        center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
-        coloured_map = folium.Map(location=center,
-                                  tiles=self._tiles, zoom_start=6)
-        style_function = ColormapStyleFunction(cmap, varname, 
-                                               minval=self._dataset[varname].min(),
-                                               maxval=self._dataset[varname].max())
-        if tooltip_attributes is None:
-            tooltip_attributes = ["reach_id", varname]
-        tooltip = folium.GeoJsonTooltip(fields=tooltip_attributes)
-        folium.Choropleth(geo_data=dataset,
-                          data=dataset,
-                          key_on="feature.properties.reach_id",
-                          columns=["reach_id", varname],
-                          fill_color="GnBu",
-                          fill_opacity=0.9,
-                          line_opacity=0.2,
-                          legend_name=varname,
-                          tooltip=tooltip,
-                          name="Test").add_to(coloured_map)
-        coloured_map.fit_bounds(self._dataset.total_bounds.tolist())
-        
-        return coloured_map
+        if add_to_map is None:
+            return new_map
