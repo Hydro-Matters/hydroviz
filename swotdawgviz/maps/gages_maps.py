@@ -23,7 +23,7 @@ class GagesMap():
         self._json_dataset = dataset.to_json()
         self._tiles = tiles
             
-    def get_map(self, varname_id=None, add_to_map=None):
+    def get_map(self, varname_id=None, shape="marker", add_to_map=None):
 
         if add_to_map is None:
             
@@ -49,15 +49,20 @@ class GagesMap():
                 popup = "%s" % str(self._dataset.loc[index, varname_id].values[0])
             else:
                 popup = None
-                
-            folium.Marker(location=coords,
-                          popup=popup).add_to(parent_map)
-            #folium.Circle(radius=50,
-                          #location=coords,
-                          #color="#048B9A",
-                          #popup=popup,
-                          #fill_color="#048B9A",
-                          #fill=True).add_to(parent_map)
+
+            if shape == "marker":
+                folium.Marker(location=coords,
+                            icon=folium.Icon(color="green"),
+                            popup=popup).add_to(parent_map)
+            elif shape == "circle":
+                folium.Circle(radius=200,
+                            location=coords,
+                            color="#048B9A",
+                            popup=popup,
+                            fill_color="#048B9A",
+                            fill=False).add_to(parent_map)
+            else:
+                raise ValueError("'shape' must be 'marker' or 'circle'")
         
         if add_to_map is None:
             return new_map
