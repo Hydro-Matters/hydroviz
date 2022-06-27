@@ -6,7 +6,7 @@ try:
     else:
         ipython = get_ipython()
         ipython.magic("matplotlib widget")
-        print("Set Interactive plots (matplotlib)")
+        print("Set Interactive plots for matplotlib backend")
 except:
     print("This library is supposed to run on a Jupyter notebook. Please be aware that some method may not work")
     

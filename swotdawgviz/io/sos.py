@@ -6,7 +6,7 @@ from shapely.geometry import LineString
 
 class SosNetCDF:
     
-    def __init__(self, fname, level="reaches", reaches_list=None):
+    def __init__(self, fname, level="reaches", reaches_list=None, verbose=True):
         """Load Sos (SWORD of Science) data in the netCDF format
         
         Parameters
@@ -17,6 +17,8 @@ class SosNetCDF:
             Data level, must be 'reaches' or 'nodes'
         reaches_lists : list or None
             List of reaches to keep. Default is None (keep all the reaches in the file)
+        verbose : bool
+            True to enable verbose output (info about variables imported)
         """
 
         # Store fname and level
@@ -66,7 +68,7 @@ class SosNetCDF:
 
         # Load one dimensional variables in model group (GRADES)
         group = self._nc_dataset.groups["model"]
-        self._unextracted_variables["grades"] = []
+        self._unextracted_variables["model"] = []
         extracted_variable_count = 0
         for variable in group.variables:
             if variable not in hidden_variables:
@@ -76,10 +78,11 @@ class SosNetCDF:
                     else:
                         variable_data = group.variables[variable][mask]
                     extracted_variable_count += 1
-                    variables_dict["grades_%s" % variable] = variable_data
+                    variables_dict["model_%s" % variable] = variable_data
                 else:
-                    self._unextracted_variables["grades"].append(variable)
-        print("%i variables extracted in model (GRADES) group" % extracted_variable_count)
+                    self._unextracted_variables["model"].append(variable)
+        if verbose:
+            print("%i variables extracted in model (GRADES) group" % extracted_variable_count)
 
         # Load one dimensional variables in gbpriors/level group
         if level == "reaches":
@@ -100,7 +103,8 @@ class SosNetCDF:
                     variables_dict["gbpriors_%s" % variable] = variable_data
                 else:
                     self._unextracted_variables["gbpriors"].append(variable)
-        print("%i variables extracted in gbpriors/%s group" % (extracted_variable_count, sublevel))
+        if verbose:
+            print("%i variables extracted in gbpriors/%s group" % (extracted_variable_count, sublevel))
                     
         self._dataset = pd.DataFrame(data=variables_dict)
         
@@ -109,13 +113,13 @@ class SosNetCDF:
         
         # Load GRDC data
         if "grdc" in model_group.groups.keys():
-            self.__load_grdc_dataset__(reaches_list)
+            self.__load_grdc_dataset__(reaches_list, verbose)
         else:
             self._grdc_dataset = None
         
         # Load usgs data
         if "usgs" in model_group.groups.keys():
-            self.__load_usgs_dataset__(reaches_list)
+            self.__load_usgs_dataset__(reaches_list, verbose)
         else:
             self._usgs_dataset = None
             
@@ -166,7 +170,7 @@ class SosNetCDF:
             
             return root.variables[varname]
     
-    def __load_grdc_dataset__(self, reaches_list):
+    def __load_grdc_dataset__(self, reaches_list, verbose=True):
         """Load variables with dimension (num_reaches,) in the grdc group, put it in a dedicated dataset 
         (pandas.DataFrame) and merge it in the global dataset
         
@@ -201,7 +205,8 @@ class SosNetCDF:
                         variables_dict["grdc_%s" % variable] = variable_data
                 else:
                     self._unextracted_variables["grdc"].append(variable)
-        print("%i variables extracted in grdc group" % len(variables_dict))
+        if verbose:
+            print("%i variables extracted in grdc group" % len(variables_dict))
 
         # Create dedicated dataset
         self._grdc_dataset = pd.DataFrame(data=variables_dict)
@@ -210,7 +215,7 @@ class SosNetCDF:
         self._dataset = self._dataset.merge(self._grdc_dataset, left_on="reach_id", 
                                             right_on="grdc_reach_id", how="left")
     
-    def __load_usgs_dataset__(self, reaches_list):
+    def __load_usgs_dataset__(self, reaches_list, verbose=True):
         """Load variables with dimension (num_reaches,) in the usgs group, put it in a dedicated dataset 
         (pandas.DataFrame) and merge it in the global dataset
         
@@ -245,7 +250,8 @@ class SosNetCDF:
                         variables_dict["usgs_%s" % variable] = variable_data
                 else:
                     self._unextracted_variables["usgs"].append(variable)
-        print("%i variables extracted in usgs group" % len(variables_dict))
+        if verbose:
+            print("%i variables extracted in usgs group" % len(variables_dict))
 
         # Create dedicated dataset
         self._grdc_dataset = pd.DataFrame(data=variables_dict)

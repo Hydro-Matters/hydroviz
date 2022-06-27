@@ -23,15 +23,25 @@ class NodesMap():
         self._json_dataset = dataset.to_json()
         self._tiles = tiles
             
-    def get_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None):
+    def get_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None]):
 
         
-        if cmap is None:
-            cmap = branca.colormap.linear.YlOrRd_09.scale(self._dataset[varname].min(),
-                                                          self._dataset[varname].max())
+        if cmap is None and varname is not None:
+            if varlimits[0] is None:
+                varlimits[0]= self._dataset[varname].min()
+            if varlimits[1] is None:
+                varlimits[1]= self._dataset[varname].max()
+            
+            cmap = branca.colormap.linear.YlOrRd_09.scale(varlimits[0],
+                                                          varlimits[1])
         elif isinstance(cmap, list):
-            cmap = branca.colormap.LinearColormap(cmap).scale(self._dataset[varname].min(),
-                                                              self._dataset[varname].max())
+            if varlimits[0] is None:
+                varlimits[0]= self._dataset[varname].min()
+            if varlimits[1] is None:
+                varlimits[1]= self._dataset[varname].max()
+
+            cmap = branca.colormap.LinearColormap(cmap).scale(varlimits[0],
+                                                              varlimits[1])
         
 
         if add_to_map is None:
@@ -53,11 +63,18 @@ class NodesMap():
             
             coords = self._dataset.geometry.loc[index].coords[0]
             coords = (coords[1], coords[0])
+            if varname is not None:
+                color = cmap(self._dataset.loc[index, varname])
+                popup = "%s = %s" % (varname, repr(self._dataset.loc[index, varname]))
+            else:
+                color = "#"+''.join([random.choice('0123456789ABCDEF') for i in range(6) ])
+                popup = "%i" % index
+                
             folium.Circle(radius=50,
                           location=coords,
-                          popup="%s = %s" % (varname, repr(self._dataset.loc[index, varname])),
-                          color=cmap(self._dataset.loc[index, varname]),
-                          fill_color=cmap(self._dataset.loc[index, varname]),
+                          popup=popup,
+                          color=color,
+                          fill_color=color,
                           fill=True).add_to(parent_map)
 
         if varname is not None:

@@ -23,7 +23,7 @@ class ReachesMap():
         self._json_dataset = dataset.to_json()
         self._tiles = tiles
             
-    def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None,varlimits=[None,None] ):
+    def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None]):
         """Build a map width reaches as centerlines colored with values of a variable
         
         Parameters
@@ -50,8 +50,14 @@ class ReachesMap():
             cmap = branca.colormap.linear.YlOrRd_09.scale(varlimits[0],
                                                           varlimits[1])
         elif isinstance(cmap, list):
-            cmap = branca.colormap.LinearColormap(cmap).scale(self._dataset[varname].min(),
-                                                                          self._dataset[varname].max())
+            if varlimits[0] is None:
+                varlimits[0]= self._dataset[varname].min()
+            if varlimits[1] is None:
+                varlimits[1]= self._dataset[varname].max()
+
+            cmap = branca.colormap.LinearColormap(cmap).scale(varlimits[0],
+                                                              varlimits[1])
+
         if tooltip_attributes is None:
             if varname is None:
                 tooltip_attributes = ["reach_id"]
@@ -76,7 +82,7 @@ class ReachesMap():
         tooltip = folium.GeoJsonTooltip(fields=tooltip_attributes)
 
         if varname is None:
-            style_function = ColormapStyleFunction(cmap, varname,randomcolors=True)
+            style_function = ColormapStyleFunction(cmap, varname, randomcolors=True)
         else:
             style_function = ColormapStyleFunction(cmap, varname)
 

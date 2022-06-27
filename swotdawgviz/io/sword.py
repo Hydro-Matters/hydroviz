@@ -92,12 +92,12 @@ class SwordNetCDF:
             
             geometries = []
             cl_ids = group.variables["cl_ids"][:, mask]
-            print(cl_ids)
+            #print(cl_ids)
             
             for index in range(0, cl_ids.shape[1]):
                 min_cl_id = cl_ids[0, index]
                 max_cl_id = cl_ids[1, index]
-                print("reach %i: %i->%i" % (index, min_cl_id, max_cl_id))
+                #print("reach %i: %i->%i" % (index, min_cl_id, max_cl_id))
                 coords = [(cl_x[cl_id2idx[i]], cl_y[cl_id2idx[i]]) for i in range(min_cl_id, max_cl_id+1)]
                 geometry = LineString(coords)
                 geometries.append(geometry)
