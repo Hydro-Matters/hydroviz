@@ -10,7 +10,7 @@ except:
 
 class DischargePlot:
     
-    def __init__(self, title=None, verbose=True):
+    def __init__(self, title=None, date_units=None, verbose=True):
         """Create a discharge plot
         
         Parameters
@@ -23,6 +23,9 @@ class DischargePlot:
 
         # Store title
         self._title = title
+
+        # Store date units
+        self._date_units = date_units
 
         # Empty lists of priors and products
         self._priors = []
@@ -44,6 +47,11 @@ class DischargePlot:
         linestyle : str
             Style of the corresponding line (see Matplotlib)
         """
+        
+        # Convert times
+        if times is not None:
+            if self._date_units == "days_since_2000":
+                times=np.datetime64("2000-01-01") + np.timedelta64(times, "D")
             
         self._priors.append({"times" : times, 
                              "values" : values, 
@@ -67,6 +75,14 @@ class DischargePlot:
         linestyle : str
             Style of the corresponding line (see Matplotlib)
         """
+
+        # Convert times
+        if times is not None:
+            if isinstance(times, np.ma.core.MaskedArray):
+                times = times.filled(np.nan)
+            if self._date_units == "days_since_2000":
+                dt = np.array([np.timedelta64(days, "D") for days in times])
+                times = np.datetime64("2000-01-01") + dt
         
         self._products.append({"times" : times, 
                                "values" : values, 
@@ -96,8 +112,13 @@ class DischargePlot:
                 fig = go.Figure()
 
         # Render products
-        xmin = np.PINF
-        xmax = np.NINF
+        if self._date_units is not None:
+            xmin = self._products[0]["times"][0]
+            xmax = self._products[0]["times"][-1]
+        else:
+            xmin = np.PINF
+            xmax = np.NINF
+
         for product in self._products:
             if backend == "matplotlib":
                 ax.plot(product["times"], product["values"], label=product["label"], c=product["color"], 
@@ -132,6 +153,6 @@ class DischargePlot:
             plt.show()
         else:
             fig.update_layout(yaxis_tickformat='f',
-                              xaxis_title='Days since 01 jan. 2000',
+                              xaxis_title='t',
                               yaxis_title='Discharge, cms')
             fig.show()
