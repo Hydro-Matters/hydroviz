@@ -108,6 +108,8 @@ class DischargePlot:
             if ax is None:
                 ax = plt.gca()
         elif backend == "plotly":
+            if go is None:
+                raise RuntimeError("plotly not found. Please install it or use backend='matplotlib'")
             if fig is None:
                 fig = go.Figure()
 

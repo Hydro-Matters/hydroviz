@@ -1,0 +1,15 @@
+name: swotdawgviz
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - geopandas
+  - shapely
+  - numpy
+  - netCDF4
+  - folium
+  - matplotlib
+  - ipypml
+  - plotly
+  - jupyter
