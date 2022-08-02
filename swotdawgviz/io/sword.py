@@ -5,6 +5,8 @@ from shapely.geometry import LineString
 
 
 class SwordShapefile:
+    """Object to handle SWORD data in shapefile format
+    """
     
     def __init__(self, fname, reaches_list=None):
         """Load a SWORD shapefile
@@ -28,6 +30,8 @@ class SwordShapefile:
             
 
 class SwordNetCDF:
+    """Object to handle SWORD data in netCDF4 format
+    """
     
     def __init__(self, fname, level="reaches", reaches_list=None, load_geometry=False):
         """Load SWORD data in the netCDF format
@@ -117,39 +121,16 @@ class SwordNetCDF:
             
     @property
     def dataset(self):
-        return self._dataset
-
-
-    #def get_reaches_from_extent(self, lonmin, lonmax, latmin, latmax):
-        #"""Retrieve reaches inside a custom  extent (bounding box)
+        """Return a reference to the internal (netCDF) dataset
         
-        #Parameters
-        #----------
-        #lonmin : float
-            #Minimum longitude
-        #lonmax : float
-            #Maximum longitude
-        #latmin : float
-            #Minimum latitude
-        #latmax : float
-            #Maximum latitude
-            
-        #Return
-        #------
-        #numpy.ndarray
-            #Array of the variable values
-        #"""
-           
-        #var = group.variables[varname]
-        #if var.dimensions = ():
-            #return var[0]
-        #elif var.dimensions = (u'nt',):
-            #array = var[:]
-        #else:
-            #raise RuntimeError("Wrong dimensions: %s" % repr(var.dimensions))
-            
-        ## Fill masked values with NaN
-        #if isinstance(array, np.ma.core.MaskedArray):
-            #array = array.filled(fill_value=np.nan)
-            
-        #return array
+        Return
+        ------
+        netCDF4.Dataset
+            Reference to the internal dataset
+        """
+        return self._dataset
+    
+    def close(self):
+        """Close the dataset
+        """
+        self._dataset.close()

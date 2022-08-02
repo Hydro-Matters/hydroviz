@@ -6,6 +6,8 @@ from .style_functions import *
 
 
 class NodesMap():
+    """Object to handle maps of data at the node level
+    """
     
     def __init__(self, dataset, tiles="cartodbpositron"):
         """Instanciate a NodesMap object to create maps that display nodes

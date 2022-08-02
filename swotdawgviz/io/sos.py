@@ -5,6 +5,8 @@ from shapely.geometry import LineString
 
 
 class SosNetCDF:
+    """Object to SoS (SWORD of Science) data in netCDF4 format
+    """
     
     def __init__(self, fname, level="reaches", reaches_list=None, verbose=True):
         """Load Sos (SWORD of Science) data in the netCDF format
@@ -158,6 +160,7 @@ class SosNetCDF:
             Extracted variable
         """
         
+
         if group is not None:
             root = self._nc_dataset
             if isinstance(group, list):
@@ -168,7 +171,20 @@ class SosNetCDF:
             else:
                 raise ValueError("'group' must be a string or a list of string")
             
+            self._nc_dataset.close()
+            self._nc_dataset = None
+            
             return root.variables[varname]
+        
+        else:
+            
+            raise ValueError("group is None")
+        
+    def close(self):
+        
+        if self._nc_dataset is not None:
+            self._nc_dataset.close()
+            self._nc_dataset = None
     
     def __load_grdc_dataset__(self, reaches_list, verbose=True):
         """Load variables with dimension (num_reaches,) in the grdc group, put it in a dedicated dataset 

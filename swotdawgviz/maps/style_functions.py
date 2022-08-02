@@ -3,6 +3,8 @@ import numpy as np
 import random
 
 class ColormapStyleFunction:
+    """Object to handle colormap style functions
+    """
     
     def __init__(self, cmap, attribute,randomcolors=False):
         self._cmap = cmap

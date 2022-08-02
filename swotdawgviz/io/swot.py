@@ -5,6 +5,8 @@ import os
 
 
 class SwotObservations:
+    """Object to handle SWOT observations data in CONFLUENCE netCDF4 format
+    """
     
     def __init__(self, fname, level="reach", sword=None, extra_variables=[]):
         """Load SWOT observations in the (netCDF) Confluence format
@@ -73,9 +75,17 @@ class SwotObservations:
             array = array.filled(fill_value=np.nan)
             
         return array
+    
+    
+    def close(self):
+        """Close the dataset
+        """
+        self._dataset.close()
 
 
 class SwotObservationsCollection:
+    """Object to handle collections of SWOT observations data in CONFLUENCE netCDF4 format
+    """
     
     def __init__(self, dirname):
         """List a collection of SWOT observations files

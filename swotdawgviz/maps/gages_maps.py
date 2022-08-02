@@ -6,6 +6,8 @@ from .style_functions import *
 
 
 class GagesMap():
+    """Object to handle maps of gages
+    """
     
     def __init__(self, dataset, tiles="cartodbpositron"):
         """Instanciate a NodesMap object to create maps that display nodes

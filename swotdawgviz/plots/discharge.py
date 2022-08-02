@@ -9,6 +9,8 @@ except:
 
 
 class DischargePlot:
+    """Object to handle generations of discharge plots
+    """
     
     def __init__(self, title=None, date_units=None, verbose=True):
         """Create a discharge plot

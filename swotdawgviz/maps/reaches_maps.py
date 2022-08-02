@@ -6,6 +6,8 @@ from .style_functions import *
 
 
 class ReachesMap():
+    """Object to handle maps of data at the reach level
+    """
     
     def __init__(self, dataset, tiles="cartodbpositron"):
         """Instanciate a ReachesMap object to create maps that display reaches
