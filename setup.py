@@ -9,5 +9,5 @@ setup(
     description = ("Visualisation library for the SWOT Discharge Algorithm Working Group"),
     license = "GNU",
     url = "https://github.com/klarnier/swotdawgviz",
-    packages=['swotdawgviz'],
+    packages=['swotdawgviz', 'swotdawgviz.io', 'swotdawgviz.maps', 'swotdawgviz.plots'],
 )
