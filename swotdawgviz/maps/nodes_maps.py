@@ -1,11 +1,11 @@
 import branca
-import folium
 import numpy as np
 
+from .map import Map
 from .style_functions import *
 
 
-class NodesMap():
+class NodesMap(Map):
     """Object to handle maps of data at the node level
     """
     
@@ -20,6 +20,8 @@ class NodesMap():
             Identifier of the tiles for the background map
         """
         
+        super().__init__(backend)
+
         # Store parameters
         self._dataset = dataset
         self._json_dataset = dataset.to_json()
@@ -53,7 +55,7 @@ class NodesMap():
             center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
             
             # Create map
-            new_map = folium.Map(location=center, tiles=self._tiles, zoom_start=6)
+            new_map = self._backend.Map(location=center, tiles=self._tiles, zoom_start=6)
             parent_map = new_map
             
         else:
@@ -72,12 +74,12 @@ class NodesMap():
                 color = "#"+''.join([random.choice('0123456789ABCDEF') for i in range(6) ])
                 popup = "%i" % index
                 
-            folium.Circle(radius=50,
-                          location=coords,
-                          popup=popup,
-                          color=color,
-                          fill_color=color,
-                          fill=True).add_to(parent_map)
+            self._backend.Circle(radius=50,
+                                 location=coords,
+                                 popup=popup,
+                                 color=color,
+                                 fill_color=color,
+                                 fill=True).add_to(parent_map)
 
         if varname is not None:
             

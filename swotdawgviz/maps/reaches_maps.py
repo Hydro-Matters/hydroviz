@@ -1,15 +1,16 @@
 import branca
-import folium
+import geopandas as gpd
 import numpy as np
 
+from .map import Map
 from .style_functions import *
 
 
-class ReachesMap():
+class ReachesMap(Map):
     """Object to handle maps of data at the reach level
     """
     
-    def __init__(self, dataset, tiles="cartodbpositron"):
+    def __init__(self, data, tiles="cartodbpositron", backend="folium"):
         """Instanciate a ReachesMap object to create maps that display reaches
         
         Parameters
@@ -19,11 +20,20 @@ class ReachesMap():
         tiles : str
             Identifier of the tiles for the background map
         """
+
+        super().__init__(backend)
         
         # Store parameters
-        self._dataset = dataset
-        self._json_dataset = dataset.to_json()
+        self._data = data
+        if hasattr(data, "dataset"):
+            self._dataset = dataset
+        # if isinstance(dataset, gpd.GeoDataFrame):
+        #     self._json_dataset = dataset.to_json()
+        # else:
+        #     self._json_dataset = None
+        # elif isinstance(dataset, json)
         self._tiles = tiles
+        # self._temporal_data = temporal
             
     def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None]):
         """Build a map width reaches as centerlines colored with values of a variable
@@ -43,9 +53,11 @@ class ReachesMap():
         # Set default values for unset parameters
         if cmap is None and varname is not None:
             if varlimits[0] is None:
-                varlimits[0]= self._dataset[varname].min()
+                print(self._data)
+                varlimits[0]= self._data.getVarMin(varname)
+                # varlimits[0]= self._dataset[varname].min()
             if varlimits[1] is None:
-                varlimits[1]= self._dataset[varname].max()
+                varlimits[1]= self._data.getVarMax(varname)
 
             #cmap = branca.colormap.linear.YlOrRd_09.scale(self._dataset[varname].min(),
             #                                              self._dataset[varname].max())
@@ -53,9 +65,9 @@ class ReachesMap():
                                                           varlimits[1])
         elif isinstance(cmap, list):
             if varlimits[0] is None:
-                varlimits[0]= self._dataset[varname].min()
+                varlimits[0]= self._data.getVarMin(varname)
             if varlimits[1] is None:
-                varlimits[1]= self._dataset[varname].max()
+                varlimits[1]= self._data.getVarMax(varname)
 
             cmap = branca.colormap.LinearColormap(cmap).scale(varlimits[0],
                                                               varlimits[1])
@@ -69,11 +81,13 @@ class ReachesMap():
         if add_to_map is None:
         
             # Retrieve bounding box and center
-            bounds = self._dataset.geometry.total_bounds.tolist()
+            bounds = self._data.getGeometryBounds()
             center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
             
             # Create map
-            new_map = folium.Map(location=center, tiles=self._tiles, zoom_start=6)
+            new_map = self._backend.Map(location=center, tiles=self._tiles, zoom_start=6, attr="Map tiles by TOTO")
+            new_map.fit_bounds([(bounds[1], bounds[0]), (bounds[3], bounds[2])])
+
             parent_map = new_map
             
         else:
@@ -81,17 +95,35 @@ class ReachesMap():
             parent_map = add_to_map
                        
         # Add layer
-        tooltip = folium.GeoJsonTooltip(fields=tooltip_attributes)
+        tooltip = self._backend.GeoJsonTooltip(fields=tooltip_attributes)
 
         if varname is None:
             style_function = ColormapStyleFunction(cmap, varname, randomcolors=True)
         else:
             style_function = ColormapStyleFunction(cmap, varname)
 
-        folium.GeoJson(self._json_dataset,
-                       style_function=style_function,
-                       tooltip=tooltip,
-                       name="Test").add_to(parent_map)
+        if hasattr(self._data, "getTimestampedGeoJson"):
+
+            print("Generate temporal geojson data")
+            geodata = self._backend.TimeStampedGeoJson(self._data.getTimestampedGeoJson(style_function),
+                                                       period="P1D",
+                                                       add_last_point=False,
+                                                       transition_time=500,
+                                                       loop=False,
+                                                       auto_play=False,
+                                                       duration="P1D")
+            print("Adding to map...")
+            geodata.add_to(parent_map)
+
+        else:
+
+            print("Generate temporal geojson data")
+            geodata = self._backend.GeoJson(self._data.getGeoJson(),
+                                            style_function=style_function,
+                                            tooltip=tooltip,
+                                            name="Test")
+            print("Adding to map...")
+            geodata.add_to(parent_map)
 
         if varname is not None:
             
@@ -159,7 +191,7 @@ class ReachesMap():
             center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
             
             # Create map
-            new_map = folium.Map(location=center, tiles=self._tiles, zoom_start=6)
+            new_map = self._backend.Map(location=center, tiles=self._tiles, zoom_start=6)
             parent_map = new_map
             
         else:
@@ -168,11 +200,11 @@ class ReachesMap():
 
         # Add layer
         style_function = ColormapStyleFunction(cmap, varname)
-        tooltip = folium.GeoJsonTooltip(fields=tooltip_attributes)
-        folium.GeoJson(dataset.to_json(),
-                       style_function=style_function,
-                       tooltip=tooltip,
-                       name="Reach map of variable %s" % varname).add_to(parent_map)
+        tooltip = self._backend.GeoJsonTooltip(fields=tooltip_attributes)
+        self._backend.GeoJson(dataset.to_json(),
+                              style_function=style_function,
+                              tooltip=tooltip,
+                              name="Reach map of variable %s" % varname).add_to(parent_map)
 
         if varname is not None:
             

@@ -1,11 +1,11 @@
 import branca
-import folium
 import numpy as np
 
+from .map import Map
 from .style_functions import *
 
 
-class GagesMap():
+class GagesMap(Map):
     """Object to handle maps of gages
     """
     
@@ -19,6 +19,8 @@ class GagesMap():
         tiles : str
             Identifier of the tiles for the background map
         """
+
+        super().__init__(backend)
         
         # Store parameters
         self._dataset = dataset
@@ -34,7 +36,7 @@ class GagesMap():
             center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
             
             # Create map
-            new_map = folium.Map(location=center, tiles=self._tiles, zoom_start=6)
+            new_map = self._backend.Map(location=center, tiles=self._tiles, zoom_start=6)
             parent_map = new_map
             
         else:
@@ -53,16 +55,16 @@ class GagesMap():
                 popup = None
 
             if shape == "marker":
-                folium.Marker(location=coords,
-                            icon=folium.Icon(color="green"),
-                            popup=popup).add_to(parent_map)
+                self._backend.Marker(location=coords,
+                                     icon=folium.Icon(color="green"),
+                                     popup=popup).add_to(parent_map)
             elif shape == "circle":
-                folium.Circle(radius=200,
-                            location=coords,
-                            color="#048B9A",
-                            popup=popup,
-                            fill_color="#048B9A",
-                            fill=False).add_to(parent_map)
+                self._backend.Circle(radius=200,
+                                     location=coords,
+                                     color="#048B9A",
+                                     popup=popup,
+                                     fill_color="#048B9A",
+                                     fill=False).add_to(parent_map)
             else:
                 raise ValueError("'shape' must be 'marker' or 'circle'")
         

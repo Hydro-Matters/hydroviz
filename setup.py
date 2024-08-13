@@ -11,3 +11,5 @@ setup(
     url = "https://github.com/klarnier/swotdawgviz",
     packages=['swotdawgviz', 'swotdawgviz.io', 'swotdawgviz.maps', 'swotdawgviz.plots'],
 )
+
+

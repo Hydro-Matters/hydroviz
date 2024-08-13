@@ -28,10 +28,17 @@ class DischargePlot:
 
         # Store date units
         self._date_units = date_units
+        if self._date_units == "days_since_2000" or self._date_units == "datetime64":
+            self._dates_on_xaxis = True
+        else:
+            self._dates_on_xaxis = False
 
         # Empty lists of priors and products
         self._priors = []
         self._products = []
+            
+    def set_dates_xaxis(self):
+        self._dates_on_xaxis = True
             
     def add_prior(self, label, values, times=None, color=None, linestyle=None):
         """Add prior data
@@ -120,16 +127,16 @@ class DischargePlot:
             xmin = self._products[0]["times"][0]
             xmax = self._products[0]["times"][-1]
         else:
-            xmin = np.PINF
-            xmax = np.NINF
+            xmin = np.inf
+            xmax = -np.inf
 
         for product in self._products:
             if backend == "matplotlib":
                 ax.plot(product["times"], product["values"], label=product["label"], c=product["color"], 
                         ls=product["linestyle"])
             elif backend == "plotly":
-                xmin = np.minimum(xmin, product["times"][0])
-                xmax = np.maximum(xmax, product["times"][-1])
+                # xmin = np.minimum(xmin, product["times"][0])
+                # xmax = np.maximum(xmax, product["times"][-1])
                 line = go.Line(x=product["times"], y=product["values"], name=product["label"],
                                line={"color" : product["color"], "width" : 2, "dash" : product["linestyle"]})
                 fig.add_trace(line)
@@ -144,16 +151,23 @@ class DischargePlot:
                             ls=prior["linestyle"])
             elif backend == "plotly":
                 if prior["times"] is None:
-                    line = go.Line(x=[xmin, xmax], y=[prior["values"]]*2, name=prior["label"],
-                               line={"color" : prior["color"], "width" : 2, "dash" : prior["linestyle"]})
-                    fig.add_trace(line)
+                    # line = go.Line(x=[xmin, xmax], y=[prior["values"]]*2, name=prior["label"],
+                    #            line={"color" : prior["color"], "width" : 2, "dash" : prior["linestyle"]})
+                    # fig.add_trace(line)
+                    fig.add_hline(y=prior["values"], name=prior["label"], line_color=prior["color"],
+                                  line_width=4, line_dash=prior["linestyle"])
                 else:
-                    line = go.Line(x=prior["times"], y=prior["values"], name=prior["label"],
-                                   line=dict(color=prior["color"], width=4, dash=prior["linestyle"]))
-                    fig.add_trace(line)
+                    # line = go.Line(x=prior["times"], y=prior["values"], name=prior["label"],
+                    #                line=dict(color=prior["color"], width=4, dash=prior["linestyle"]))
+                    print("here...")
+                    fig.add_hline(y=prior["values"], name=prior["label"], line_color=prior["color"],
+                                  line_width=4, line_dash=prior["linestyle"])
         
         if backend == "matplotlib":
+            if self._dates_on_xaxis:
+                plt.xticks(rotation=45)
             plt.legend()
+            plt.tight_layout()
             plt.show()
         else:
             fig.update_layout(yaxis_tickformat='f',

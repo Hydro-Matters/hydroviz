@@ -5,9 +5,12 @@ try:
         print("This library is supposed to run on a Jupyter notebook. Please be aware that some method may not work")
     else:
         ipython = get_ipython()
-        ipython.magic("matplotlib widget")
-        print("Set Interactive plots for matplotlib backend")
-except:
+        try:
+            ipython.magic("matplotlib widget")
+            print("Set interactive plots for matplotlib backend")
+        except:
+            print("Unable to set interactive plots for matplotlib backend")
+except Exception as err:
     print("This library is supposed to run on a compatible Jupyter notebook. Please be aware that some method may not work")
     
         

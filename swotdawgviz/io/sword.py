@@ -4,6 +4,9 @@ import numpy as np
 from shapely.geometry import LineString
 
 
+sword_continent_from_id = {1: "AF", 2: "EU", 3: "AS", 5: "OC", 6: "SA", 7: "NA"}
+
+
 class SwordShapefile:
     """Object to handle SWORD data in shapefile format
     """
@@ -27,7 +30,20 @@ class SwordShapefile:
     @property
     def dataset(self):
         return self._dataset
-            
+
+    def getVarMin(self, varname):
+        if varname not in self._data.columns():
+            raise RuntimeError("Variable not found in dataset: %s" % varname)
+        return self._dataset[varname].min()
+
+    def getVarMax(self, varname):
+        if varname not in self._data.columns():
+            raise RuntimeError("Variable not found in dataset: %s" % varname)
+        return self._dataset[varname].max()
+
+    def getGeometryBounds(self):
+        return self._dataset.geometry.total_bounds.tolist()
+
 
 class SwordNetCDF:
     """Object to handle SWORD data in netCDF4 format
