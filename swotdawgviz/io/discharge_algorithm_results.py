@@ -79,16 +79,6 @@ class DischargeAlgorithmResults:
             initial_vertices_count += len(geometry.coords)
             self._sword_dataset.loc[index, "geometry"] = simplify(geometry, tolerance=simplify_tolerance)
             final_vertices_count += len(self._sword_dataset.loc[index, "geometry"].coords)
-            # geometry = 
-            # sword_id = sword_ids[index]
-            # continent = sword_continent_from_id[int(sword_id[0:1])]
-            # sword_file = os.path.join(sword_shp_dir, continent, "%s_sword_reaches_hb%s_v16.shp" % (continent.lower(), sword_id))
-            # sword = SwordShapefile(sword_file, reaches_list=[int(reach_id) for reach_id in reach_ids])
-            # if self._sword_dataset is None:
-            #     self._sword_dataset = sword.dataset.loc[:, ["reach_id", "geometry"]]
-            # else:
-            #     self._sword_dataset = pd.concat((self._sword_dataset, sword.dataset.loc[:, ["reach_id", "geometry"]]), ignore_index=True)
-            # print(self._sword_dataset)
         print("- Initial vertices count: %i" % initial_vertices_count)
         print("- Final vertices count  : %i" % final_vertices_count)
 
