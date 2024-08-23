@@ -39,8 +39,10 @@ class DischargeAlgorithmResults:
                 reaches_def = sets_list[index]
             for reach in reaches_def:
                 reach_id = reach["reach_id"]
+                print("--Reach ID: %s" % str(reach_id))
                 if reach_id not in reach_ids:
                     fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), algorithm))
+                    print("--fname: %s" % str(reach_id))
                     if os.path.isfile(fname):
                         if basinID is not None:
                             basinIDstr = str(basinID)
@@ -54,6 +56,8 @@ class DischargeAlgorithmResults:
                             sword_id = str(reach_id)[0:2]
                             if sword_id not in sword_ids:
                                 sword_ids.append(sword_id)
+        if len(sword_ids) == 0:
+            raise RuntimeError("Zero results found for algorithm %s in basin with ID %s" % (algorithm, str(basinID)))
 
         # Load SWORD geometry
         self._sword_dataset = None
