@@ -117,7 +117,7 @@ class DischargeAlgorithmResults:
                     #                                     "max": results.varMax(varname)}
             for varname in results.variables.keys():
                 varmin = results.varMin(varname)
-                varmax = results.varMin(varname)
+                varmax = results.varMax(varname)
                 if np.isfinite(varmin):
                     # print("%s: min=%f (%f)" % (reach_id, varmin, self._results_variables[varname]["min"]))
                     self._results_variables[varname]["min"] = np.nanmin([self._results_variables[varname]["min"], varmin])
