@@ -1,7 +1,5 @@
-import geopandas as gpd
 import netCDF4 as nc
 import numpy as np
-from shapely.geometry import LineString
 
 
 class OutputHiVDI:
