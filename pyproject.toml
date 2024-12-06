@@ -31,7 +31,5 @@ packages = ["swotdawgviz"]
 Homepage = "https://github.com/klarnier/swotdawgviz"
 
 [build-system]
-requires = [
-    "setuptools>=42",
-]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
