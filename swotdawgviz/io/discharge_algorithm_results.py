@@ -153,7 +153,7 @@ class DischargeAlgorithmResults:
     def getGeometryBounds(self):
         return self._sword_dataset.geometry.total_bounds.tolist()
 
-    def getTimestampedGeoJson(self, style_function):
+    def getTimestampedGeoJson(self, style_function, varname):
 
         features = []
         for i in tqdm(range(len(self._sword_dataset.index))):
@@ -172,8 +172,8 @@ class DischargeAlgorithmResults:
                     },
                     "properties": {
                         "times": [str(self._results[reach_id]._dates[it])] * len(self._sword_dataset.loc[index, "geometry"].coords),
-                        "discharge": float(self._results[reach_id]._Q[it]),
-                        "tooltip": "%i, Q=%.3f m3/s" % (reach_id, float(self._results[reach_id]._Q[it])),
+                        varname: float(self._results[reach_id].variables[varname][it]),
+                        "tooltip": "%i, %s=%.3f m3/s" % (reach_id, varname, float(self._results[reach_id]._Q[it])),
                     },
                 }
                 if style_function is not None:
