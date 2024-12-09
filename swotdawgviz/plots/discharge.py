@@ -36,6 +36,9 @@ class DischargePlot:
         # Empty lists of priors and products
         self._priors = []
         self._products = []
+        
+        self.xlabel = None
+        self.ylabel = None
             
     def set_dates_xaxis(self):
         self._dates_on_xaxis = True
@@ -68,7 +71,7 @@ class DischargePlot:
                              "color" : color,
                              "linestyle" : linestyle})
             
-    def add_product(self, label, values, times=None, color=None, linestyle=None):
+    def add_product(self, label, values, times=None, color=None, linestyle=None, ci=None):
         """Add product (algorithm output) data
         
         Parameters
@@ -93,13 +96,25 @@ class DischargePlot:
                 dt = np.array([np.timedelta64(days, "D") for days in times])
                 times = np.datetime64("2000-01-01") + dt
         
+        if ci is not None:
+            lower = ci[:,0]
+            higher = ci[:,1]
+        else:
+            lower = None
+            higher = None
+        
         self._products.append({"times" : times, 
                                "values" : values, 
                                "label" : label, 
                                "color" : color,
-                               "linestyle" : linestyle})
+                               "linestyle" : linestyle,
+                               "lower": lower,
+                               "higher": higher})
             
-
+    def add_axis_labels(self, xlabel, ylabel):
+        self.xlabel = xlabel
+        self.ylabel = ylabel
+            
     def render(self, fig=None, ax=None, backend="matplotlib"):
         """Render the plot
         
@@ -132,8 +147,11 @@ class DischargePlot:
 
         for product in self._products:
             if backend == "matplotlib":
-                ax.plot(product["times"], product["values"], label=product["label"], c=product["color"], 
+                lab = product["label"]
+                ax.plot(product["times"], product["values"], label=lab, c=product["color"], 
                         ls=product["linestyle"])
+                if product["lower"] is not None and product["higher"] is not None:
+                    ax.fill_between(product["times"], product["lower"], product["higher"], color=product["color"], alpha=0.2, label=f"{lab} - CI")
             elif backend == "plotly":
                 # xmin = np.minimum(xmin, product["times"][0])
                 # xmax = np.maximum(xmax, product["times"][-1])
@@ -162,10 +180,17 @@ class DischargePlot:
                     print("here...")
                     fig.add_hline(y=prior["values"], name=prior["label"], line_color=prior["color"],
                                   line_width=4, line_dash=prior["linestyle"])
-        
+
         if backend == "matplotlib":
             if self._dates_on_xaxis:
                 plt.xticks(rotation=45)
+            if self._title is not None:
+                plt.title(self._title)
+
+            if self.xlabel is not None:
+                plt.xlabel(self.xlabel)
+            if self.ylabel is not None:
+                plt.ylabel(self.ylabel)
             plt.legend()
             plt.tight_layout()
             plt.show()
@@ -173,4 +198,6 @@ class DischargePlot:
             fig.update_layout(yaxis_tickformat='f',
                               xaxis_title='t',
                               yaxis_title='Discharge, cms')
+            if self._title is not None:
+                fig.suptitle(self._title)
             fig.show()
