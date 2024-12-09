@@ -105,7 +105,7 @@ class ReachesMap(Map):
         if hasattr(self._data, "getTimestampedGeoJson"):
 
             print("Generate temporal geojson data")
-            geodata = self._backend.TimeStampedGeoJson(self._data.getTimestampedGeoJson(style_function),
+            geodata = self._backend.TimeStampedGeoJson(self._data.getTimestampedGeoJson(style_function, varname),
                                                        period="P1D",
                                                        add_last_point=False,
                                                        transition_time=500,

@@ -22,28 +22,35 @@ class SwotObservations:
         """
 
         # Retrieve logger and append debug messages
-        logger = logging.getLogger("swotviz")
-        logger.debug("Instanciate ConfluenceSwotObservations object <%s>" % id(self))
-        logger.debug("- fname: %s" % fname)
-        self._logger = logger
+        # logger = logging.getLogger("swotviz")
+        # logger.debug("Instanciate ConfluenceSwotObservations object <%s>" % id(self))
+        # logger.debug("- fname: %s" % fname)
+        # self._logger = logger
         
         # Store fname and level
         self._fname = fname
         self._level = level
         
         # Open dataset
-        self._dataset = nc.Open(fname, "r")
+        self._dataset = nc.Dataset(fname, "r")
         
         # Select group
         group = self._dataset.groups[level]
 
         # Load default variables
-        self.wse = self.load_xt_variable(group, "wse")
-        self.width = self.load_xt_variable(group, "width")
-        self.d_x_area = self.load_xt_variable(group, "d_x_area")
+        self.wse = self.load_variable(group, "wse")
+        self.width = self.load_variable(group, "width")
+        self.d_x_area = self.load_variable(group, "d_x_area")
         if level == "reach":
-            self.slope2 = self.load_xt_variable(group, "slope2")
+            self.slope2 = self.load_variable(group, "slope2")
             self.slope = self.slope2
+
+        # Retrieve dates
+        if "time" in group.variables:
+            time = group.variables["time"][:]
+            self._dates = np.array([np.datetime64("2000-01-01") + np.timedelta64(int(x), "s") for x in time])
+        else:
+            self._dates = None
 
 
     def load_variable(self, group, varname):
@@ -81,6 +88,28 @@ class SwotObservations:
         """Close the dataset
         """
         self._dataset.close()
+            
+    @property
+    def variables(self):
+        return {"wse": self.wse,
+                "width": self.width,
+                "slope": self.slope}
+
+    def varMin(self, varname):
+        variables = self.variables
+        if varname not in variables.keys():
+            raise ValueError("Variable not found: %s" % varname)
+        if np.all(np.isnan(variables[varname])):
+            return np.nan
+        return float(np.nanmin(variables[varname]))
+
+    def varMax(self, varname):
+        variables = self.variables
+        if varname not in variables.keys():
+            raise ValueError("Variable not found: %s" % varname)
+        if np.all(np.isnan(variables[varname])):
+            return np.nan
+        return float(np.nanmax(variables[varname]))
 
 
 class SwotObservationsCollection:
