@@ -1,10 +1,10 @@
 [project]
-name = "swotdawgviz"
+name = "hydroviz"
 version = "0.0.1"
 authors = [
   { name="Kevin Larnier", email="kevin.larnier@hydro-matters.fr" },
 ]
-description = "SWOT Discharge Algorithm Working Group Visualisation Toolkit"
+description = "Visualisation Toolkit for Spatial Hydrology"
 readme = "README.md"
 license = {file = "LICENSE"}
 dependencies = [
@@ -25,10 +25,10 @@ classifiers = [
 ]
 
 [tool.setuptools]
-packages = ["swotdawgviz"]
+packages = ["hydroviz"]
 
 [project.urls]
-Homepage = "https://github.com/klarnier/swotdawgviz"
+Homepage = "https://github.com/Hydro-Matters/hydroviz"
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
