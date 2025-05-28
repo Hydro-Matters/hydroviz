@@ -101,6 +101,8 @@ class DischargeAlgorithmResults:
             if algorithm == "hivdi":
                 results = OutputHiVDI(fname)
             elif algorithm == "h2ivdi":
+                if not os.path.isfile(fname):
+                    fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), "hivdi"))
                 results = OutputH2iVDI(fname)
             else:
                 raise ValueError("Unknown (or unimplemented) algorithm: %s" % algorithm)
