@@ -42,6 +42,9 @@ class DischargeAlgorithmResults:
                 print("--Reach ID: %s" % str(reach_id))
                 if reach_id not in reach_ids:
                     fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), algorithm))
+                    if algorithm == "h2ivdi":
+                        if not os.path.isfile(fname):
+                            fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), "hivdi"))
                     print("--fname: %s" % str(reach_id))
                     if os.path.isfile(fname):
                         if basinID is not None:
