@@ -12,6 +12,7 @@ from .sos import SosNetCDF
 from .sword import SwordNetCDF
 
 from .h2ivdi import OutputH2iVDI
+from .sic4dvar import OutputSIC4DVar
 from .hivdi import OutputHiVDI
 from .sword import SwordShapefile, sword_continent_from_id
 
@@ -107,6 +108,8 @@ class DischargeAlgorithmResults:
                 if not os.path.isfile(fname):
                     fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), "hivdi"))
                 results = OutputH2iVDI(fname)
+            elif algorithm == "sic4dvar":
+                results = OutputSIC4DVar(fname)
             else:
                 raise ValueError("Unknown (or unimplemented) algorithm: %s" % algorithm)
             if not results.valid:

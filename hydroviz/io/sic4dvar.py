@@ -46,9 +46,19 @@ class OutputSIC4DVar:
         # Retrieve dates
         if "times" in self._nc_dataset.variables:
             times = self._nc_dataset.variables["times"][:]
+            if isinstance(times, np.ma.core.MaskedArray):
+                times = times.filled(fill_value=np.nan)
+            nan_indices = np.where(np.isnan(times))[0]
+            if len(nan_indices) >= 1:
+                self._Q_da = np.delete(self._Q_da, nan_indices)
+                self._Q_u = np.delete(self._Q_u, nan_indices)
+                times = np.delete(times, nan_indices)
+                self._t = np.delete(self._t, nan_indices)
             self._dates = np.array([np.datetime64("2000-01-01") + np.timedelta64(int(x), "D") for x in times])
         else:
             self._dates = None
+        
+        self._Q = self._Q_da
 
             
     def status(self, which="global"):
