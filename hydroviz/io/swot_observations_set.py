@@ -5,7 +5,7 @@ import numpy as np
 import os
 import pandas as pd
 from shapely import simplify
-from tqdm.autonotebook import tqdm
+from tqdm import tqdm
 
 
 from .sos import SosNetCDF
