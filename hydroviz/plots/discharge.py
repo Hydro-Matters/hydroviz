@@ -147,12 +147,12 @@ class DischargePlot:
                 fig = go.Figure()
 
         # Render products
-        if self._date_units is not None:
-            xmin = self._products[0]["times"][0]
-            xmax = self._products[0]["times"][-1]
-        else:
-            xmin = np.inf
-            xmax = -np.inf
+        # if self._date_units is not None
+        #     xmin = self._products[0]["times"][0]
+        #     xmax = self._products[0]["times"][-1]
+        # else:
+        #     xmin = np.inf
+        #     xmax = -np.inf
 
         for product in self._products:
             if backend == "matplotlib":
