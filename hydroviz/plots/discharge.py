@@ -96,13 +96,22 @@ class DischargePlot:
                 dt = np.array([np.timedelta64(days, "D") for days in times])
                 times = np.datetime64("2000-01-01") + dt
         
+        # Remove NaN values
+        valid_mask = ~np.isnan(values)
+        
         if ci is not None:
             lower = ci[:,0]
             higher = ci[:,1]
+            lower = lower[valid_mask]
+            higher = higher[valid_mask]
         else:
             lower = None
             higher = None
-        
+
+        values = values[valid_mask]
+        if times is not None:
+            times = times[valid_mask]
+
         self._products.append({"times" : times, 
                                "values" : values, 
                                "label" : label, 
