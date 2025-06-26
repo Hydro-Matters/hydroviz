@@ -137,6 +137,7 @@ class ReachesMap(Map):
         
         if add_to_map is None:
             return new_map
+        return parent_map
 
             
     def get_polygons_map(self, varname, width_attribute, cmap=None, tooltip_attributes=None, add_to_map=None):
