@@ -6,12 +6,12 @@ from .map import Map
 from .style_functions import *
 
 
-class ReachesMap(Map):
+class CatchmentsMap(Map):
     """Object to handle maps of data at the reach level
     """
     
     def __init__(self, data, tiles="cartodbpositron", backend="folium"):
-        """Instanciate a ReachesMap object to create maps that display reaches
+        """Instanciate a ReachesMap object to create maps that display catchments
         
         Parameters
         ----------
@@ -35,8 +35,8 @@ class ReachesMap(Map):
         self._tiles = tiles
         # self._temporal_data = temporal
             
-    def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None]):
-        """Build a map width reaches as centerlines colored with values of a variable
+    def get_catchments_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None]):
+        """Build a map width catchments polygons colored with values of a variable
         
         Parameters
         ----------
@@ -53,7 +53,7 @@ class ReachesMap(Map):
         # Set default values for unset parameters
         if cmap is None and varname is not None:
             if varlimits[0] is None:
-                print(self._data)
+                # print(self._data)
                 varlimits[0]= self._data.getVarMin(varname)
                 # varlimits[0]= self._dataset[varname].min()
             if varlimits[1] is None:
@@ -85,8 +85,10 @@ class ReachesMap(Map):
             center = (0.5 * (bounds[1] + bounds[3]), 0.5 * (bounds[0] + bounds[2]))
             
             # Create map
-            new_map = self._backend.Map(location=center, tiles=self._tiles, zoom_start=6, attr="Map tiles by TOTO")
-            new_map.fit_bounds([(bounds[1], bounds[0]), (bounds[3], bounds[2])])
+            # new_map = self._backend.Map(location=center, tiles=self._tiles, zoom_start=6, attr="Map tiles by TOTO")
+            new_map = self._backend.Map(location=center, tiles=self._tiles, zoom_start=6)
+            if hasattr(new_map, "fit_bounds"):
+                new_map.fit_bounds([(bounds[1], bounds[0]), (bounds[3], bounds[2])])
 
             parent_map = new_map
             
@@ -102,6 +104,15 @@ class ReachesMap(Map):
         else:
             style_function = ColormapStyleFunction(cmap, varname)
 
+        if hasattr(self._data, "getStaticGeoJson"):
+
+            mini_style_function=lambda feature: {"fill": False, "color": "#000000"}
+
+            print("Generate static geojson data")
+            geodata = self._backend.GeoJson(self._data.getStaticGeoJson(None), mini_style_function)
+            self._backend.add_to_map(parent_map, layerID="catchment_%s" % varname, data=geodata)
+            # geodata.add_to(parent_map)
+
         if hasattr(self._data, "getTimestampedGeoJson"):
 
             print("Generate temporal geojson data")
@@ -113,7 +124,9 @@ class ReachesMap(Map):
                                                        auto_play=False,
                                                        duration="P1D")
             print("Adding to map...")
-            geodata.add_to(parent_map)
+            # if hasattr(self._backend, "add_to_map"):
+            self._backend.add_to_map(map=parent_map, layerID="catchments_%s" % varname, data=geodata)
+            # geodata.add_to(parent_map)
 
         else:
 
@@ -123,14 +136,18 @@ class ReachesMap(Map):
                                             tooltip=tooltip,
                                             name="Test")
             print("Adding to map...")
-            geodata.add_to(parent_map)
+            self._backend.add_to_map(map=parent_map, layerID="catchments_%s" % varname, data=geodata)
+            # geodata.add_to(parent_map)
 
         if varname is not None:
             
             # Add colorbar
             colormap = cmap.to_step(n=8)
             colormap.caption = varname
-            colormap.add_to(parent_map)
+            try:
+                colormap.add_to(parent_map)
+            except:
+                pass
 
         #if add_to_map is None:
             #parent_map.fit_bounds(self._dataset.total_bounds.tolist())

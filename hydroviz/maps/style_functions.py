@@ -22,4 +22,4 @@ class ColormapStyleFunction:
         else:
             hexcolor = self._cmap(x["properties"][self._attribute])
 
-        return {'color': hexcolor, 'weight' : 5}
+        return {'color': hexcolor, 'weight' : 5, "dash_array": ""}
