@@ -7,7 +7,7 @@ try:
 except:
     ol = None
 
-from .backends import FoliumBackend, OpenLayersBackend
+from .backends import FoliumBackend, OpenLayersBackend, KeplerGlBackend
 
 class Map:
 
@@ -20,6 +20,10 @@ class Map:
             if ol == None:
                 raise RuntimeError("'mapwidget' library is not installed.")
             self._backend = OpenLayersBackend()
+        elif backend == "keplergl":
+            self._backend = KeplerGlBackend()
+        else:
+            raise ValueError("Wrong backend: %s" % backend)
 
 
         
