@@ -1,5 +1,6 @@
 import netCDF4 as nc
 import numpy as np
+import pandas as pd
 
 
 class OutputHiVDI:
@@ -51,12 +52,28 @@ class OutputHiVDI:
         else:
             self._dates = None
 
-            
     def status(self, which="global"):
         if which == "vda":
             return self._vda_status
         else:
             return self._status
+        
+    def get_temporal_means(self, varname, temporal_freq):
+
+        variables = self.variables
+        if varname not in variables.keys():
+            raise ValueError("Variable not found: %s" % varname)
+
+        min_date = self._dates[0]
+        max_date = self._dates[-1]
+        df = pd.DataFrame(data={"date": self._dates, "var": variables[varname]})
+        df.dropna()
+        # print(df)
+        month_df = df.groupby(pd.PeriodIndex(df['date'], freq=temporal_freq))['var'].mean().reset_index()
+        # print(month_df, type(month_df))
+        month_df['date'] = month_df['date'].astype(str)
+        month_df['date'] = pd.to_datetime(month_df['date'])
+        return month_df["date"].values, month_df["var"].values
             
     @property
     def valid(self):

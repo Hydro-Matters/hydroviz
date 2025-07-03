@@ -139,10 +139,10 @@ class DischargeAlgorithmResults:
 
     def getVarMin(self, varname):
         if varname in self._sword_dataset.columns:
-            print("getVarMin[0](%s)=%f" % (varname, self._results_variables[varname]["min"]))
+            # print("getVarMin[0](%s)=%f" % (varname, self._results_variables[varname]["min"]))
             return self._dataset[varname].min()
         elif varname in self._results_variables:
-            print("getVarMin[1](%s)=%f" % (varname, self._results_variables[varname]["min"]))
+            # print("getVarMin[1](%s)=%f" % (varname, self._results_variables[varname]["min"]))
             return self._results_variables[varname]["min"]
         else:
             raise RuntimeError("Variable not found in dataset: %s" % varname)
@@ -158,7 +158,7 @@ class DischargeAlgorithmResults:
     def getGeometryBounds(self):
         return self._sword_dataset.geometry.total_bounds.tolist()
 
-    def getTimelineGeoJson(self, style_function, varname):
+    def getTimelineGeoJson(self, style_function, varname, temporal_mean=None):
 
         features = []
         unix_epoch = np.datetime64(0, 's')
@@ -168,13 +168,33 @@ class DischargeAlgorithmResults:
 
             reach_id = int(self._sword_dataset.loc[index, "reach_id"])
 
-            for it in range(len(self._results[reach_id]._dates)):
+            if temporal_mean is not None:
+                if temporal_mean not in ["M"]:
+                    raise ValueError("temporal_mean must be 'M'")
+                dates, values = self._results[reach_id].get_temporal_means(varname, temporal_mean)
+                # print(dates)
+            else:
+                dates = self._results[reach_id]._dates
+                values = self._results[reach_id].variables[varname]
+
+            if i == 0:
+                min_start_date = int((dates[0] - unix_epoch) / np.timedelta64(1, 's'))
+                max_end_date = int((dates[-1] - unix_epoch) / np.timedelta64(1, 's'))
+            else:
+                min_start_date = min(min_start_date, int((dates[0] - unix_epoch) / np.timedelta64(1, 's')))
+                max_end_date = max(max_end_date, int((dates[-1] - unix_epoch) / np.timedelta64(1, 's')))
+
+
+            for it in range(len(dates)):
 
                 # start_date = str(self._results[reach_id]._dates[it])
-                start_date = int((self._results[reach_id]._dates[it] - unix_epoch) / np.timedelta64(1, 's'))
-                if it < len(self._results[reach_id]._dates) - 1:
+                start_date = int((dates[it] - unix_epoch) / np.timedelta64(1, 's'))
+                if it < len(dates) - 1:
                     # end_date = str(self._results[reach_id]._dates[it+1])
-                    end_date = int((self._results[reach_id]._dates[it+1] - unix_epoch) / np.timedelta64(1, 's'))
+                    if temporal_mean == "M":
+                        end_date = int((dates[it+1] - unix_epoch - np.timedelta64(1, "h")) / np.timedelta64(1, 's'))
+                    else:
+                        end_date = int((dates[it+1] - unix_epoch - np.timedelta64(1, "s")) / np.timedelta64(1, 's'))
                 else:
                     # end_date = str(self._results[reach_id]._dates[it])
                     end_date = start_date
@@ -193,8 +213,8 @@ class DischargeAlgorithmResults:
                     "properties": {
                         "start": start_date * 1000,
                         "end": end_date * 1000,
-                        varname: float(self._results[reach_id].variables[varname][it]),
-                        "tooltip": "%i, %s=%.3f m3/s" % (reach_id, varname, float(self._results[reach_id]._Q[it])),
+                        varname: float(values[it]),
+                        # "tooltip": "%i, %s=%.3f m3/s" % (reach_id, varname, float(values[it])),
                     },
                 }
                 if style_function is not None:
@@ -202,7 +222,8 @@ class DischargeAlgorithmResults:
                 features.append(feature)
 
         jsonData = {"type": "FeatureCollection",
-                    "features": features}
+                    "features": features,
+                    "date_range": [min_start_date, max_end_date]}
 
         return jsonData
 

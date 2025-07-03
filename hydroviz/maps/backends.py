@@ -51,10 +51,23 @@ class FoliumBackend:
                             }
                         """)
         geodata = folium.plugins.Timeline(*args, **kwargs)
+        if kwargs["temporal_mean"] == "M":
+            steps = 10
+            steps0 = (args[0]["date_range"][1] - args[0]["date_range"][0]) / 86400.0
+            # print("steps0=", steps0)
+            steps = steps0
+            playback_duration = 1000
+        else:
+            steps = None
+            steps0 = (args[0]["date_range"][1] - args[0]["date_range"][0]) / 3600.0
+            # print("steps0=", steps0)
+            steps = int(steps0)
+            playback_duration = 30000
         slider = folium.plugins.TimelineSlider(auto_play=False,
                                                show_ticks=True,
                                                enable_keyboard_controls=True,
-                                               playback_duration=30000,
+                                               steps=steps,
+                                               playback_duration=playback_duration,
         )
         return geodata, slider
 
