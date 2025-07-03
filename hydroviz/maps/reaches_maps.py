@@ -102,7 +102,18 @@ class ReachesMap(Map):
         else:
             style_function = ColormapStyleFunction(cmap, varname)
 
-        if hasattr(self._data, "getTimestampedGeoJson"):
+        if hasattr(self._data, "getTimelineGeoJson"):
+
+            print("Generate temporal geojson data")
+            geodata, slider = self._backend.Timeline(self._data.getTimelineGeoJson(style_function, varname),
+                                                    #  style=lambda feature: feature["properties"]["style"])
+                                                     )
+            print("Adding to map...")
+            geodata.add_to(parent_map)
+
+            slider.add_timelines(geodata).add_to(parent_map)
+
+        elif hasattr(self._data, "getTimestampedGeoJson"):
 
             print("Generate temporal geojson data")
             geodata = self._backend.TimeStampedGeoJson(self._data.getTimestampedGeoJson(style_function, varname),

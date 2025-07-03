@@ -39,13 +39,13 @@ class DischargeAlgorithmResults:
                 reaches_def = sets_list[index]
             for reach in reaches_def:
                 reach_id = reach["reach_id"]
-                print("--Reach ID: %s" % str(reach_id))
+                # print("--Reach ID: %s" % str(reach_id))
                 if reach_id not in reach_ids:
                     fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), algorithm))
                     if algorithm == "h2ivdi":
                         if not os.path.isfile(fname):
                             fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), "hivdi"))
-                    print("--fname: %s" % str(reach_id))
+                    # print("--fname: %s" % str(reach_id))
                     if os.path.isfile(fname):
                         if basinID is not None:
                             basinIDstr = str(basinID)
@@ -157,6 +157,54 @@ class DischargeAlgorithmResults:
 
     def getGeometryBounds(self):
         return self._sword_dataset.geometry.total_bounds.tolist()
+
+    def getTimelineGeoJson(self, style_function, varname):
+
+        features = []
+        unix_epoch = np.datetime64(0, 's')
+        for i in tqdm(range(len(self._sword_dataset.index))):
+
+            index = self._sword_dataset.index[i]
+
+            reach_id = int(self._sword_dataset.loc[index, "reach_id"])
+
+            for it in range(len(self._results[reach_id]._dates)):
+
+                # start_date = str(self._results[reach_id]._dates[it])
+                start_date = int((self._results[reach_id]._dates[it] - unix_epoch) / np.timedelta64(1, 's'))
+                if it < len(self._results[reach_id]._dates) - 1:
+                    # end_date = str(self._results[reach_id]._dates[it+1])
+                    end_date = int((self._results[reach_id]._dates[it+1] - unix_epoch) / np.timedelta64(1, 's'))
+                else:
+                    # end_date = str(self._results[reach_id]._dates[it])
+                    end_date = start_date
+                # if i == 0:
+                #     print(type(self._results[reach_id]._dates[it]))
+                #     print(start_date)
+                # start_date = -113688e6
+                # end_date = 13410288e5
+
+                feature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [list(xy) for xy in self._sword_dataset.loc[index, "geometry"].coords],
+                    },
+                    "properties": {
+                        "start": start_date * 1000,
+                        "end": end_date * 1000,
+                        varname: float(self._results[reach_id].variables[varname][it]),
+                        "tooltip": "%i, %s=%.3f m3/s" % (reach_id, varname, float(self._results[reach_id]._Q[it])),
+                    },
+                }
+                if style_function is not None:
+                    feature["properties"]["style"] = style_function(feature)
+                features.append(feature)
+
+        jsonData = {"type": "FeatureCollection",
+                    "features": features}
+
+        return jsonData
 
     def getTimestampedGeoJson(self, style_function, varname):
 

@@ -20,8 +20,10 @@ class OutputHiVDI:
         self._status = self._nc_dataset.status
         if hasattr(self._nc_dataset, "VDA_status"):
             self._inference_status = self._nc_dataset.VDA_status
-        else:
+        elif hasattr(self._nc_dataset, "inference_status"):
             self._inference_status = self._nc_dataset.inference_status
+        else:
+            self._inference_status = None
         
         # Retrieve results
         self._t = self._nc_dataset.variables["nt"][:]
