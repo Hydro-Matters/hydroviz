@@ -40,13 +40,14 @@ class DischargeAlgorithmResults:
                 reaches_def = sets_list[index]
             for reach in reaches_def:
                 reach_id = reach["reach_id"]
-                #print("--Reach ID: %s" % str(reach_id))
+
+                # print("--Reach ID: %s" % str(reach_id))
                 if reach_id not in reach_ids:
                     fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), algorithm))
                     if algorithm == "h2ivdi":
                         if not os.path.isfile(fname):
                             fname = os.path.join(output_dir, "%s_%s.nc" % (str(reach_id), "hivdi"))
-                    #print("--fname: %s" % str(reach_id))
+                    # print("--fname: %s" % str(reach_id))
                     if os.path.isfile(fname):
                         if basinID is not None:
                             basinIDstr = str(basinID)
@@ -142,10 +143,10 @@ class DischargeAlgorithmResults:
 
     def getVarMin(self, varname):
         if varname in self._sword_dataset.columns:
-            print("getVarMin[0](%s)=%f" % (varname, self._results_variables[varname]["min"]))
+            # print("getVarMin[0](%s)=%f" % (varname, self._results_variables[varname]["min"]))
             return self._dataset[varname].min()
         elif varname in self._results_variables:
-            print("getVarMin[1](%s)=%f" % (varname, self._results_variables[varname]["min"]))
+            # print("getVarMin[1](%s)=%f" % (varname, self._results_variables[varname]["min"]))
             return self._results_variables[varname]["min"]
         else:
             raise RuntimeError("Variable not found in dataset: %s" % varname)
@@ -160,6 +161,74 @@ class DischargeAlgorithmResults:
 
     def getGeometryBounds(self):
         return self._sword_dataset.geometry.total_bounds.tolist()
+
+    def getTimelineGeoJson(self, style_function, varname, temporal_mean=None):
+
+        features = []
+        unix_epoch = np.datetime64(0, 's')
+        for i in tqdm(range(len(self._sword_dataset.index))):
+
+            index = self._sword_dataset.index[i]
+
+            reach_id = int(self._sword_dataset.loc[index, "reach_id"])
+
+            if temporal_mean is not None:
+                if temporal_mean not in ["M"]:
+                    raise ValueError("temporal_mean must be 'M'")
+                dates, values = self._results[reach_id].get_temporal_means(varname, temporal_mean)
+                # print(dates)
+            else:
+                dates = self._results[reach_id]._dates
+                values = self._results[reach_id].variables[varname]
+
+            if i == 0:
+                min_start_date = int((dates[0] - unix_epoch) / np.timedelta64(1, 's'))
+                max_end_date = int((dates[-1] - unix_epoch) / np.timedelta64(1, 's'))
+            else:
+                min_start_date = min(min_start_date, int((dates[0] - unix_epoch) / np.timedelta64(1, 's')))
+                max_end_date = max(max_end_date, int((dates[-1] - unix_epoch) / np.timedelta64(1, 's')))
+
+            for it in range(len(dates)):
+
+                # start_date = str(self._results[reach_id]._dates[it])
+                start_date = int((dates[it] - unix_epoch) / np.timedelta64(1, 's'))
+                if it < len(dates) - 1:
+                    # end_date = str(self._results[reach_id]._dates[it+1])
+                    if temporal_mean == "M":
+                        end_date = int((dates[it+1] - unix_epoch - np.timedelta64(1, "h")) / np.timedelta64(1, 's'))
+                    else:
+                        end_date = int((dates[it+1] - unix_epoch - np.timedelta64(1, "s")) / np.timedelta64(1, 's'))
+                else:
+                    # end_date = str(self._results[reach_id]._dates[it])
+                    end_date = start_date
+                # if i == 0:
+                #     print(type(self._results[reach_id]._dates[it]))
+                #     print(start_date)
+                # start_date = -113688e6
+                # end_date = 13410288e5
+
+                feature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [list(xy) for xy in self._sword_dataset.loc[index, "geometry"].coords],
+                    },
+                    "properties": {
+                        "start": start_date * 1000,
+                        "end": end_date * 1000,
+                        varname: float(values[it]),
+                        # "tooltip": "%i, %s=%.3f m3/s" % (reach_id, varname, float(values[it])),
+                    },
+                }
+                if style_function is not None:
+                    feature["properties"]["style"] = style_function(feature)
+                features.append(feature)
+
+        jsonData = {"type": "FeatureCollection",
+                    "features": features,
+                    "date_range": [min_start_date, max_end_date]}
+
+        return jsonData
 
     def getTimestampedGeoJson(self, style_function, varname):
 

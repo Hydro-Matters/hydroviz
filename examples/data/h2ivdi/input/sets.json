@@ -1,0 +1,650 @@
+[
+  [
+    {
+      "reach_id": 61660400341,
+      "swot": "61660400341_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400331,
+      "swot": "61660400331_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400301,
+      "swot": "61660400301_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660300071,
+    "swot": "61660300071_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660200031,
+      "swot": "61660200031_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660200021,
+      "swot": "61660200021_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660200011,
+      "swot": "61660200011_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660300021,
+    "swot": "61660300021_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660300061,
+      "swot": "61660300061_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660300051,
+      "swot": "61660300051_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660300041,
+      "swot": "61660300041_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660400031,
+      "swot": "61660400031_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400021,
+      "swot": "61660400021_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400011,
+      "swot": "61660400011_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660500021,
+    "swot": "61660500021_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  {
+    "reach_id": 61660500041,
+    "swot": "61660500041_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660400051,
+      "swot": "61660400051_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400041,
+      "swot": "61660400041_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660400261,
+      "swot": "61660400261_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400251,
+      "swot": "61660400251_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400241,
+      "swot": "61660400241_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400231,
+      "swot": "61660400231_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400221,
+      "swot": "61660400221_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400211,
+      "swot": "61660400211_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400201,
+      "swot": "61660400201_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400171,
+      "swot": "61660400171_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660400061,
+    "swot": "61660400061_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  {
+    "reach_id": 61660500061,
+    "swot": "61660500061_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660500081,
+      "swot": "61660500081_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660500151,
+      "swot": "61660500151_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660500071,
+    "swot": "61660500071_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  {
+    "reach_id": 61660400081,
+    "swot": "61660400081_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  {
+    "reach_id": 61660500101,
+    "swot": "61660500101_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660400131,
+      "swot": "61660400131_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400121,
+      "swot": "61660400121_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400111,
+      "swot": "61660400111_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400101,
+      "swot": "61660400101_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660400151,
+    "swot": "61660400151_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  {
+    "reach_id": 61660400191,
+    "swot": "61660400191_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660400321,
+      "swot": "61660400321_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400311,
+      "swot": "61660400311_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400161,
+      "swot": "61660400161_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660400361,
+    "swot": "61660400361_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660400561,
+      "swot": "61660400561_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400551,
+      "swot": "61660400551_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400541,
+      "swot": "61660400541_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400501,
+      "swot": "61660400501_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400351,
+      "swot": "61660400351_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660400381,
+    "swot": "61660400381_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660400781,
+      "swot": "61660400781_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400771,
+      "swot": "61660400771_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400761,
+      "swot": "61660400761_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660401031,
+      "swot": "61660401031_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400461,
+      "swot": "61660400461_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400451,
+      "swot": "61660400451_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400441,
+      "swot": "61660400441_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660400391,
+    "swot": "61660400391_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660401021,
+      "swot": "61660401021_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400531,
+      "swot": "61660400531_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401001,
+      "swot": "61660401001_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660400691,
+      "swot": "61660400691_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400481,
+      "swot": "61660400481_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400471,
+      "swot": "61660400471_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660401271,
+      "swot": "61660401271_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401261,
+      "swot": "61660401261_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401251,
+      "swot": "61660401251_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400741,
+      "swot": "61660400741_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400731,
+      "swot": "61660400731_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400721,
+      "swot": "61660400721_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400431,
+      "swot": "61660400431_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400421,
+      "swot": "61660400421_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400411,
+      "swot": "61660400411_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400401,
+      "swot": "61660400401_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660401091,
+      "swot": "61660401091_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401081,
+      "swot": "61660401081_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401061,
+      "swot": "61660401061_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  {
+    "reach_id": 61660400891,
+    "swot": "61660400891_SWOT.nc",
+    "sos": "sa_sword_v16_SOS_priors.nc",
+    "sword": "sa_sword_v16.nc"
+  },
+  [
+    {
+      "reach_id": 61660401151,
+      "swot": "61660401151_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400711,
+      "swot": "61660400711_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400701,
+      "swot": "61660400701_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660401311,
+      "swot": "61660401311_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401321,
+      "swot": "61660401321_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400671,
+      "swot": "61660400671_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400661,
+      "swot": "61660400661_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400991,
+      "swot": "61660400991_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400641,
+      "swot": "61660400641_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401211,
+      "swot": "61660401211_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660401191,
+      "swot": "61660401191_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401181,
+      "swot": "61660401181_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401201,
+      "swot": "61660401201_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401351,
+      "swot": "61660401351_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660400971,
+      "swot": "61660400971_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400961,
+      "swot": "61660400961_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400951,
+      "swot": "61660400951_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400941,
+      "swot": "61660400941_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660400931,
+      "swot": "61660400931_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ],
+  [
+    {
+      "reach_id": 61660401241,
+      "swot": "61660401241_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401231,
+      "swot": "61660401231_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401221,
+      "swot": "61660401221_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401121,
+      "swot": "61660401121_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    },
+    {
+      "reach_id": 61660401111,
+      "swot": "61660401111_SWOT.nc",
+      "sos": "sa_sword_v16_SOS_priors.nc",
+      "sword": "sa_sword_v16.nc"
+    }
+  ]
+]

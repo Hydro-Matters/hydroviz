@@ -1,6 +1,7 @@
 try:
     import folium
     import folium.plugins
+    from folium.utilities import JsCode
 except:
     folium = None
 try:
@@ -40,9 +41,38 @@ class FoliumBackend:
     def Marker(self, *args, **kwargs):
         return folium.Marker(*args, **kwargs)
 
+    def Timeline(self, *args, **kwargs):
+        kwargs["style"] = style=JsCode("""
+                            function (data) {
+                                return {
+                                    color: data.properties.style.color,
+                                    weight: data.properties.style.weight,
+                                };
+                            }
+                        """)
+        geodata = folium.plugins.Timeline(*args, **kwargs)
+        if kwargs["temporal_mean"] == "M":
+            steps = 10
+            steps0 = (args[0]["date_range"][1] - args[0]["date_range"][0]) / 86400.0
+            # print("steps0=", steps0)
+            steps = steps0
+            playback_duration = 1000
+        else:
+            steps = None
+            steps0 = (args[0]["date_range"][1] - args[0]["date_range"][0]) / 3600.0
+            # print("steps0=", steps0)
+            steps = int(steps0)
+            playback_duration = 30000
+        slider = folium.plugins.TimelineSlider(auto_play=False,
+                                               show_ticks=True,
+                                               enable_keyboard_controls=True,
+                                               steps=steps,
+                                               playback_duration=playback_duration,
+        )
+        return geodata, slider
+
     def TimeStampedGeoJson(self, *args, **kwargs):
         return folium.plugins.TimestampedGeoJson(*args, **kwargs)
-
     
     def add_to_map(self, map, layerID, data):
         data.add_to(map)

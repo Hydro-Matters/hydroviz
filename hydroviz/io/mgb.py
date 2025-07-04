@@ -1,6 +1,7 @@
 import geopandas as gpd
 import netCDF4 as nc
 import numpy as np
+import pandas as pd
 from shapely import simplify
 from tqdm.autonotebook import tqdm
 
@@ -61,6 +62,21 @@ class OutputMGB:
             return self._vda_status
         else:
             return self._status
+        
+    def get_temporal_means(self, varname, temporal_freq):
+
+        variables = self.variables
+        if varname not in variables.keys():
+            raise ValueError("Variable not found: %s" % varname)
+
+        min_date = self._dates[0]
+        max_date = self._dates[-1]
+        df = pd.DataFrame(data={"date": self._dates, "var": variables[varname]})
+        df.dropna()
+        month_df = df.groupby(pd.PeriodIndex(df['date'], freq=temporal_freq))['var'].mean().reset_index()
+        month_df['date'] = month_df['date'].astype(str)
+        month_df['date'] = pd.to_datetime(month_df['date'])
+        return month_df["date"].values, month_df["var"].values
             
     @property
     def valid(self):
@@ -126,6 +142,118 @@ class OutputMGB:
 
         return jsonData
 
+    def getTimelineGeoJson(self, style_function, varname, temporal_mean=None):
+
+        features = []
+        variable = self.variables[varname]
+        unix_epoch = np.datetime64(0, 's')
+
+        if temporal_mean is not None:
+            if temporal_mean not in ["M"]:
+                raise ValueError("temporal_mean must be 'M'")
+            dates, values = self.get_temporal_means(varname, temporal_mean)
+        else:
+            dates = self._dates
+            values = self.variables[varname]
+
+        min_start_date = int((dates[0] - unix_epoch) / np.timedelta64(1, 's'))
+        max_end_date = int((dates[-1] - unix_epoch) / np.timedelta64(1, 's'))
+
+        ordering_data = {"index": [], "reach_index": [], "stream_order": []}
+        for i in tqdm(range(variable.shape[1])):
+
+            catchment_row = self._catchments_dataset[self._catchments_dataset["Mini"].astype(int) == i+1]
+
+            # catchment_row = self._reaches_dataset[self._reaches_dataset["ID"].astype(int) == i+1]
+            if catchment_row.index.size != 1:
+                continue
+            if catchment_row.loc[catchment_row.index[0], "Ordem"] < 3:
+                continue
+
+            ID = int(catchment_row["ID"].values[0])
+            mini = int(catchment_row["Mini"].values[0])
+            stream_order = int(catchment_row["Ordem"].values[0])
+
+            reach_row = self._reaches_dataset[self._reaches_dataset["ID"].astype(int) == ID]
+            if reach_row.index.size != 1:
+                continue
+
+            ordering_data["index"].append(i)
+            ordering_data["reach_index"].append(reach_row.index[0])
+            ordering_data["stream_order"].append(stream_order)
+
+        ordering_df = pd.DataFrame(data=ordering_data)
+        ordering_df = ordering_df.sort_values(by="stream_order", ascending=True)
+        # print(ordering_df)
+
+        # for i in tqdm(range(variable.shape[1])):
+
+        #     catchment_row = self._catchments_dataset[self._catchments_dataset["Mini"].astype(int) == i+1]
+
+        #     # catchment_row = self._reaches_dataset[self._reaches_dataset["ID"].astype(int) == i+1]
+        #     if catchment_row.index.size != 1:
+        #         continue
+
+        #     ID = int(catchment_row["ID"].values[0])
+        #     mini = int(catchment_row["Mini"].values[0])
+
+        #     reach_row = self._reaches_dataset[self._reaches_dataset["ID"].astype(int) == ID]
+        #     if reach_row.index.size != 1:
+        #         continue
+
+        #     if catchment_row.loc[catchment_row.index[0], "Ordem"] < 3:
+        #         continue
+
+        #     index = reach_row.index[0]
+
+        for i in tqdm(range(ordering_df.index.size)):
+
+            index = ordering_df.loc[i, "index"]
+            reach_index = ordering_df.loc[i, "reach_index"]
+
+            geometry = {
+                "type": "LineString",
+                "coordinates": [list(xy) for xy in self._reaches_dataset.loc[reach_index, "geometry"].simplify(tolerance=0.001).coords],
+            }
+            
+
+            for it in range(len(self._dates)):
+
+                start_date = int((dates[it] - unix_epoch) / np.timedelta64(1, 's'))
+                if it < len(dates) - 1:
+                    # end_date = str(self._results[reach_id]._dates[it+1])
+                    if temporal_mean == "M":
+                        end_date = int((dates[it+1] - unix_epoch - np.timedelta64(1, "h")) / np.timedelta64(1, 's'))
+                    else:
+                        end_date = int((dates[it+1] - unix_epoch - np.timedelta64(1, "s")) / np.timedelta64(1, 's'))
+                else:
+                    # end_date = str(self._results[reach_id]._dates[it])
+                    end_date = start_date
+
+                varvalue = float(self.variables[varname][it, index])
+
+                feature = {
+                    "type": "Feature",
+                    "geometry": geometry,
+                    "properties": {
+                        "start": start_date * 1000,
+                        "end": end_date * 1000,
+                        varname: varvalue,
+                        # "tooltip": "mini=%i, date=%s, %s=%.3f SI" % (mini, str(self._dates[it]), varname, varvalue),
+                    },
+                }
+                if style_function is not None:
+                    feature["properties"]["style"] = style_function(feature)
+                    # print("style=", feature["properties"]["style"])
+
+                features.append(feature)
+
+        jsonData = {"type": "FeatureCollection",
+                    "features": features,
+                    "date_range": [min_start_date, max_end_date]}
+
+        return jsonData
+    
     def getTimestampedGeoJson(self, style_function, varname):
 
         features = []
@@ -185,7 +313,6 @@ class OutputMGB:
                     "features": features}
 
         return jsonData
-    
 
     def getVarMin(self, varname):
         if varname in self._catchments_dataset.columns:

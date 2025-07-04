@@ -35,7 +35,7 @@ class ReachesMap(Map):
         self._tiles = tiles
         # self._temporal_data = temporal
             
-    def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None]):
+    def get_centerlines_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None], temporal_mean=None):
         """Build a map width reaches as centerlines colored with values of a variable
         
         Parameters
@@ -53,7 +53,7 @@ class ReachesMap(Map):
         # Set default values for unset parameters
         if cmap is None and varname is not None:
             if varlimits[0] is None:
-                print(self._data)
+                # print(self._data)
                 varlimits[0]= self._data.getVarMin(varname)
                 # varlimits[0]= self._dataset[varname].min()
             if varlimits[1] is None:
@@ -102,7 +102,22 @@ class ReachesMap(Map):
         else:
             style_function = ColormapStyleFunction(cmap, varname)
 
-        if hasattr(self._data, "getTimestampedGeoJson"):
+        if hasattr(self._data, "getTimelineGeoJson"):
+
+            print("Generate temporal geojson data")
+            geodata, slider = self._backend.Timeline(self._data.getTimelineGeoJson(style_function, varname, temporal_mean=temporal_mean),
+                                                     temporal_mean=temporal_mean)
+                                                    #  style=lambda feature: feature["properties"]["style"])
+                                                    #  )
+            if add_to_map is None:
+                print("Displaying map...")
+            else:
+                print("Adding to map...")
+            geodata.add_to(parent_map)
+
+            slider.add_timelines(geodata).add_to(parent_map)
+
+        elif hasattr(self._data, "getTimestampedGeoJson"):
 
             print("Generate temporal geojson data")
             geodata = self._backend.TimeStampedGeoJson(self._data.getTimestampedGeoJson(style_function, varname),
