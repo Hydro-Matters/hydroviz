@@ -184,7 +184,6 @@ class DischargeAlgorithmResults:
                 min_start_date = min(min_start_date, int((dates[0] - unix_epoch) / np.timedelta64(1, 's')))
                 max_end_date = max(max_end_date, int((dates[-1] - unix_epoch) / np.timedelta64(1, 's')))
 
-
             for it in range(len(dates)):
 
                 # start_date = str(self._results[reach_id]._dates[it])

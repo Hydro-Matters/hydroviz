@@ -35,8 +35,8 @@ class CatchmentsMap(Map):
         self._tiles = tiles
         # self._temporal_data = temporal
             
-    def get_catchments_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None]):
-        """Build a map width catchments polygons colored with values of a variable
+    def get_catchments_map(self, varname=None, cmap=None, tooltip_attributes=None, add_to_map=None, varlimits=[None, None], temporal_mean=None):
+        """Build a map width catchments polygons/reaches colored with values of a variable
         
         Parameters
         ----------
@@ -113,7 +113,22 @@ class CatchmentsMap(Map):
             self._backend.add_to_map(parent_map, layerID="catchment_%s" % varname, data=geodata)
             # geodata.add_to(parent_map)
 
-        if hasattr(self._data, "getTimestampedGeoJson"):
+        if hasattr(self._data, "getTimelineGeoJson"):
+
+            print("Generate temporal geojson data")
+            geodata, slider = self._backend.Timeline(self._data.getTimelineGeoJson(style_function, varname, temporal_mean=temporal_mean),
+                                                     temporal_mean=temporal_mean)
+                                                    #  style=lambda feature: feature["properties"]["style"])
+                                                    #  )
+            if add_to_map is None:
+                print("Displaying map...")
+            else:
+                print("Adding to map...")
+            geodata.add_to(parent_map)
+
+            slider.add_timelines(geodata).add_to(parent_map)
+
+        elif hasattr(self._data, "getTimestampedGeoJson"):
 
             print("Generate temporal geojson data")
             geodata = self._backend.TimeStampedGeoJson(self._data.getTimestampedGeoJson(style_function, varname),
