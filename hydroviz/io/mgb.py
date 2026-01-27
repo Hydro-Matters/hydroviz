@@ -71,12 +71,18 @@ class OutputMGB:
 
         min_date = self._dates[0]
         max_date = self._dates[-1]
-        df = pd.DataFrame(data={"date": self._dates, "var": variables[varname]})
-        df.dropna()
-        month_df = df.groupby(pd.PeriodIndex(df['date'], freq=temporal_freq))['var'].mean().reset_index()
-        month_df['date'] = month_df['date'].astype(str)
-        month_df['date'] = pd.to_datetime(month_df['date'])
-        return month_df["date"].values, month_df["var"].values
+        dates = None
+        freq_var = None
+        for index in range(variables[varname].shape[0]):
+            df = pd.DataFrame(data={"date": self._dates, "var": variables[varname][:, index]})
+            df.dropna()
+            freq_df = df.groupby(pd.PeriodIndex(df['date'], freq=temporal_freq))['var'].mean().reset_index()
+            if dates is None:
+                dates = np.array([freq_df.loc[i, "date"].start_time for i in freq_df.index])
+                freq_var = np.zeros((dates.size, variables[varname].shape[1]))
+            freq_var[:, index] = freq_df["var"].values
+                
+        return dates, freq_var
             
     @property
     def valid(self):
@@ -149,7 +155,7 @@ class OutputMGB:
         unix_epoch = np.datetime64(0, 's')
 
         if temporal_mean is not None:
-            if temporal_mean not in ["M"]:
+            if temporal_mean not in ["M", "W"]:
                 raise ValueError("temporal_mean must be 'M'")
             dates, values = self.get_temporal_means(varname, temporal_mean)
         else:
@@ -217,7 +223,7 @@ class OutputMGB:
             }
             
 
-            for it in range(len(self._dates)):
+            for it in range(len(dates)):
 
                 start_date = int((dates[it] - unix_epoch) / np.timedelta64(1, 's'))
                 if it < len(dates) - 1:
