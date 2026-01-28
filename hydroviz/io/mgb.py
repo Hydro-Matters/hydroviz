@@ -38,6 +38,10 @@ class OutputMGB:
         self._Q = self._nc_dataset.variables["Q"][:, :]
         if isinstance(self._Q, np.ma.core.MaskedArray):
             self._Q = self._Q.filled(fill_value=np.nan)
+        if "Q_u" in self._nc_dataset.variables:
+            self._Q_u = self._nc_dataset.variables["Q_u"][:, :]
+            if isinstance(self._Q_u, np.ma.core.MaskedArray):
+                self._Q_u = self._Q_u.filled(fill_value=np.nan)
 
         # Retrieve dates
         if "time" in self._nc_dataset.variables:
@@ -49,12 +53,16 @@ class OutputMGB:
         if time_subset is not None:
             self._dates = self._dates[time_subset[0]:time_subset[1]]
             self._Q = self._Q[time_subset[0]:time_subset[1], :]
+            if hasattr(self, "_Q_u"):
+                self._Q_u = self._Q_u[time_subset[0]:time_subset[1], :]
         if spatial_subset is not None:
             self._Q = self._Q[:, spatial_subset[0]:spatial_subset[1]]
+            if hasattr(self, "_Q_u"):
+                self._Q_u = self._Q_u[:, spatial_subset[0]:spatial_subset[1]]
 
 
-        self._results_variables = {"Q": {"min": np.min(np.ravel(self._Q)), "max": np.max(np.ravel(self._Q))}}
-        self._results_variables = {"discharge": {"min": np.min(np.ravel(self._Q)), "max": np.max(np.ravel(self._Q))}}
+        self._results_variables = {"Q": {"min": np.min(np.ravel(self._Q)), "max": np.max(np.ravel(self._Q))},
+                                   "discharge": {"min": np.min(np.ravel(self._Q)), "max": np.max(np.ravel(self._Q))}}
 
             
     def status(self, which="global"):
@@ -95,10 +103,20 @@ class OutputMGB:
     @property
     def dates(self):
         return self._dates
+
+    @property
+    def time(self):
+        return self._dates
             
     @property
     def Q(self):
         return self._Q
+            
+    @property
+    def Q_u(self):
+        if not hasattr(self, "_Q_u"):
+            raise RuntimeError("Current MGB output has no discharge uncertainty")
+        return self._Q_u
             
     @property
     def discharge(self):
