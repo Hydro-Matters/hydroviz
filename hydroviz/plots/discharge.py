@@ -71,7 +71,7 @@ class DischargePlot:
                              "color" : color,
                              "linestyle" : linestyle})
             
-    def add_product(self, label, values, times=None, color=None, linestyle=None, ci=None):
+    def add_product(self, label, values, times=None, color=None, linestyle=None, unc=None, ci=None):
         """Add product (algorithm output) data
         
         Parameters
@@ -86,6 +86,10 @@ class DischargePlot:
             Color of the corresponding line (see Matplotlib)
         linestyle : str
             Style of the corresponding line (see Matplotlib)
+        unc : numpy.ndarray
+            Timeseries of product discharge uncertainty
+        ci : numpy.ndarray
+            Array of lower and upper confidence interval (dimensions = (time, lower/upper))
         """
 
         # Convert times
@@ -104,6 +108,9 @@ class DischargePlot:
             higher = ci[:,1]
             lower = lower[valid_mask]
             higher = higher[valid_mask]
+        elif unc is not None:
+            lower = values - unc
+            higher = values + unc
         else:
             lower = None
             higher = None
