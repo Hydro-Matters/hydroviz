@@ -119,13 +119,21 @@ class DischargePlot:
         if times is not None:
             times = times[valid_mask]
 
-        self._products.append({"times" : times, 
-                               "values" : values, 
-                               "label" : label, 
-                               "color" : color,
-                               "linestyle" : linestyle,
-                               "lower": lower,
-                               "higher": higher})
+        if label == "":
+            self._products.append({"times" : times, 
+                                   "values" : values, 
+                                   "color" : color,
+                                   "linestyle" : linestyle,
+                                   "lower": lower,
+                                   "higher": higher})
+        else:
+            self._products.append({"times" : times, 
+                                   "values" : values, 
+                                   "label" : label, 
+                                   "color" : color,
+                                   "linestyle" : linestyle,
+                                   "lower": lower,
+                                   "higher": higher})
             
     def add_axis_labels(self, xlabel, ylabel):
         self.xlabel = xlabel
@@ -163,9 +171,13 @@ class DischargePlot:
 
         for product in self._products:
             if backend == "matplotlib":
-                lab = product["label"]
-                ax.plot(product["times"], product["values"], label=lab, c=product["color"], 
-                        ls=product["linestyle"])
+                try:
+                    lab = product["label"]
+                    ax.plot(product["times"], product["values"], label=lab, c=product["color"], 
+                            ls=product["linestyle"])
+                except KeyError:
+                    ax.plot(product["times"], product["values"], c=product["color"], 
+                            ls=product["linestyle"])
                 if product["lower"] is not None and product["higher"] is not None:
                     ax.fill_between(product["times"], product["lower"], product["higher"], color=product["color"], alpha=0.2, label=f"{lab} - CI")
             elif backend == "plotly":
